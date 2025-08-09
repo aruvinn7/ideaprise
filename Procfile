@@ -1,0 +1,1 @@
+web: gunicorn ideaprise.wsgi
