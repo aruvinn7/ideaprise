@@ -1,1 +1,1 @@
-web: gunicorn ideaprise.wsgi
+web: gunicorn arjosari.wsgi
