@@ -1,0 +1,109 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      
+      <!-- Article Header -->
+      <div class="mb-4">
+        <span class="badge bg-primary mb-2">{{ getkegiatan.id_kategori.nama_kategori }}</span>
+        <h1 class="fw-bold mb-3">{{ getkegiatan.nama_kegiatan }}</h1>
+        <p class="text-muted">{{ getkegiatan.created_at|date:"F d, Y" }}</p>
+      </div>
+
+      <!-- Photo Carousel -->
+      <div class="mb-4">
+        {% if gambar_tambahan %}
+          <div id="photoCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner rounded">
+              <!-- Main Photo -->
+              <div class="carousel-item active">
+                <img src="{{ getkegiatan.gambar_kegiatan.url }}" 
+                     class="d-block w-100" 
+                     alt="{{ getkegiatan.nama_kegiatan }}"
+                     style="height: 400px; object-fit: cover;">
+              </div>
+              
+              <!-- Additional Photos -->
+              {% for gambar in gambar_tambahan %}
+              <div class="carousel-item">
+                <img src="{{ gambar.gambar.url }}" 
+                     class="d-block w-100" 
+                     alt="Photo {{ forloop.counter }}"
+                     style="height: 400px; object-fit: cover;">
+              </div>
+              {% endfor %}
+            </div>
+            
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#photoCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#photoCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </button>
+          </div>
+          
+          <!-- Photo Counter -->
+          <div class="text-center mt-2">
+            <small class="text-muted">
+              <span id="currentPhoto">1</span> of {{ gambar_tambahan|length|add:1 }} photos
+            </small>
+          </div>
+        {% else %}
+          <!-- Single Photo -->
+          <img src="{{ getkegiatan.gambar_kegiatan.url }}" 
+               class="img-fluid w-100 rounded" 
+               alt="{{ getkegiatan.nama_kegiatan }}"
+               style="height: 400px; object-fit: cover;">
+        {% endif %}
+      </div>
+
+      <!-- Article Text -->
+      <div class="article-content">
+        <div style="font-size: 1.1rem; line-height: 1.8; text-align: justify;">
+          {{ getkegiatan.deskripsi_kegiatan|linebreaksbr }}
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <div class="text-center mt-5">
+        <a href="{% url 'read_kegiatan' %}" class="btn btn-outline-primary">
+          ← Back to Articles
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Update photo counter
+const carousel = document.getElementById('photoCarousel');
+if (carousel) {
+    carousel.addEventListener('slide.bs.carousel', function (e) {
+        document.getElementById('currentPhoto').textContent = e.to + 1;
+    });
+}
+</script>
+
+<style>
+/* Simple styling */
+.article-content p {
+    margin-bottom: 1.5rem;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+}
+
+@media (max-width: 768px) {
+    .carousel img {
+        height: 250px !important;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Import Poppins Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- Hero Section -->
+<div class="hero" style="background: linear-gradient(to right, #023E8A, #00B4D8); padding: 2rem 0; color: white; margin-bottom: 3rem;">
+  <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+    <h1 style="color: white; margin: 0; font-size: 2.5rem;">Produk</h1>    
+  </div>    
+</div>
+
+<!-- Main Container -->
+{% if request.user.is_authenticated %}
+<div style="background-color: white; padding: 3rem 0;">
+  <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+    <div class="card" style="background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+      <div style="overflow-x: auto; width: 100%;">
+        <table style="width: 100%; min-width: 600px; border-collapse: collapse;">
+          <thead style="background-color: #023E8A; color: white;">
+            <tr>
+                <th style="padding: 15px; text-align: center;">No</th>
+                <th style="padding: 15px; text-align: center;">ID Produk</th>
+                <th style="padding: 15px; text-align: center;">Nama Produk</th>
+                <th style="padding: 15px; text-align: center;">Gambar</th>
+                <th style="padding: 15px; text-align: center;">Kategori</th>
+                <th style="padding: 15px; text-align: center;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in produkobj %}
+              <tr style="border-bottom: 1px solid #ADE8F4;">
+                <td style="padding: 15px; color: #023E8A;">{{ forloop.counter }}</td>
+                <td style="padding: 15px; text-align: center;">
+                    <a href="{% url 'read_detailproduk' i.id_produk %}" 
+                      style="color: #0077b6; text-decoration: none; font-size: 0.9rem;">
+                        {{ i.id_produk }}
+                    </a>
+                </td>
+                <td style="padding: 15px; text-align: center;">
+                    <a href="{% url 'read_detailproduk' i.id_produk %}" style="color: #0077b6; text-decoration: none; font-size: 0.9rem;">
+                        {{ i.nama_produk }}
+                    </a>
+                </td>
+                <td style="padding: 15px; text-align: center;">
+            {% if i.thumbnail_produk %}
+              <img src="{{ i.thumbnail_produk.url }}" alt="Thumbnail" style="height: 80px; object-fit: cover; border-radius: 5px;">
+            {% else %}
+              <span class="text-muted">Tidak ada gambar</span>
+            {% endif %}
+          </td>
+                <td style="padding: 15px; font-size: 0.9rem; text-align: center;">{{ i.id_kategori }}</td>
+                <td style="padding: 15px; text-align: center;">
+                    <a href="{% url 'update_produk' i.id_produk %}" 
+                      style="background-color: #0096C7; color: white; text-align: center; padding: 8px 15px; border-radius: 4px; margin-right: 8px; text-decoration: none; display: inline-block; font-size: 0.9rem;">
+                        Update
+                    </a>
+                    <a href="{% url 'delete_produk' i.id_produk %}" 
+                      style="background-color: #E63946; color: white; text-align: center; padding: 8px 15px; border-radius: 4px; margin-right: 8px; text-decoration: none; display: inline-block; font-size: 0.9rem;">
+                        Delete
+                    </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'create_produk' %}" class="btn btn-primary mt-4">Tambah Produk</a>
+    {% endif %}
+  </div>
+</div>
+
+{% else %}
+<div style="background-color: white; padding: 3rem 0;">
+
+  <div class="produk-grid">
+    {% for produk in produkobj %}
+    <div class="produk-card">
+      {% if produk.thumbnail_produk %}
+        <img class="produk-image" src="{{ produk.thumbnail_produk.url }}" alt="{{ produk.nama_produk }}">
+      {% else %}
+        <img class="produk-image" src="{% static 'images/default.jpg' %}" alt="default">
+      {% endif %}
+
+      <div class="produk-info">
+        <div>
+          <h3>{{ produk.nama_produk }}</h3>
+          <p class="produk-price">Rp{{ produk.harga_produk|floatformat:0 }}</p>
+          <p class="produk-description product-description-{{ produk.id_produk }}">
+            {{ produk.deskripsi_produk }}
+          </p>
+          
+        </div>
+        <a href="{% url 'read_detailproduk' produk.id_produk %}" class="produk-button">
+          View Detail
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+  
+{% endif %}
+</div> <!-- TUTUP CONTAINER DI SINI -->
+
+<script>
+function toggleDescription(productId) {
+    const desc = document.querySelector(`.product-description-${productId}`);
+    const button = desc.nextElementSibling;
+    if (desc.style.display === 'none') {
+        desc.style.display = 'block';
+        button.textContent = 'Read Less';
+    } else {
+        desc.style.display = 'none';
+       
+    }
+}
+</script>
+
+{% endblock content %}

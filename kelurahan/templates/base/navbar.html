@@ -1,0 +1,66 @@
+{% load static %}
+
+<!-- Start Header/Navigation -->
+<nav class="custom-navbar navbar navbar-expand-md navbar-dark bg-dark shadow" aria-label="Furni navigation bar">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'base' %}">ARJOSARI<span>.</span></a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsFurni">
+            <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'base' %}">Beranda</a>
+                </li>
+                
+                {% if request.user.is_authenticated %}
+                <!-- Kategori Dropdown -->
+                <li class="nav-item dropdown {% if request.resolver_match.url_name == 'read_kategori' or request.resolver_match.url_name == 'create_kategori' %}active{% endif %}">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownKategori" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kategori</a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownKategori">
+                        <li><a class="dropdown-item" href="{% url 'read_kategori' %}">Data Kategori</a></li>
+                  
+                        <li><a class="dropdown-item" href="{% url 'create_kategori' %}">Tambah Kategori</a></li>
+                      </ul>
+                    </li>
+                {% endif %}
+
+                <!-- Kegiatan Dropdown -->
+                <li class="nav-item dropdown {% if request.resolver_match.url_name == 'read_kegiatan' or request.resolver_match.url_name == 'create_kegiatan' %}active{% endif %}">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownKegiatan" role="button" data-bs-toggle="dropdown" aria-expanded="false">Kegiatan</a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownKegiatan">
+                        <li><a class="dropdown-item" href="{% url 'read_kegiatan' %}">Data Kegiatan</a></li>
+                        {% if request.user.is_authenticated %}
+                        <li><a class="dropdown-item" href="{% url 'create_kegiatan' %}">Tambah Kegiatan</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+
+                <!-- Produk Dropdown -->
+                <li class="nav-item dropdown {% if request.resolver_match.url_name == 'read_produk' or request.resolver_match.url_name == 'create_produk' %}active{% endif %}">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownProduk" role="button" data-bs-toggle="dropdown" aria-expanded="false">Produk</a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownProduk">
+                        <li><a class="dropdown-item" href="{% url 'read_produk' %}">Data Produk</a></li>
+                        {% if request.user.is_authenticated %}
+                        <li><a class="dropdown-item" href="{% url 'create_produk' %}">Tambah Produk</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+
+                <!-- Bundling Dropdown -->
+                <li class="nav-item dropdown {% if request.resolver_match.url_name == 'read_bundling' or request.resolver_match.url_name == 'create_bundling' %}active{% endif %}">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownBundling" role="button" data-bs-toggle="dropdown" aria-expanded="false">Bundling</a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownBundling">
+                        <li><a class="dropdown-item" href="{% url 'read_bundling' %}">Data Bundling</a></li>
+                        {% if request.user.is_authenticated %}
+                        <li><a class="dropdown-item" href="{% url 'create_bundling' %}">Tambah Bundling</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End Header/Navigation -->

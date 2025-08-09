@@ -1,0 +1,174 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Styling khusus untuk halaman ini */
+    .product-detail-container {
+        padding: 40px 0;
+        background: #f5f7fa;
+    }
+    
+    .product-detail {
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+        margin-bottom: 40px;
+    }
+    
+    .product-detail:hover {
+        transform: translateY(-5px);
+    }
+    
+    .carousel-inner img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+    
+    .detail-produk h3 {
+        color: #1a252f;
+        font-weight: 600;
+    }
+    
+    .label {
+        font-weight: 500;
+        color: #34495e;
+        width: 130px;
+        display: inline-block;
+    }
+    
+    .price {
+        color: #27ae60;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    .btn-custom {
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-secondary {
+        background-color: #95a5a6;
+        border: none;
+    }
+    
+    .btn-shopee {
+        background-color: #FE5722; /* Warna oranye Shopee */
+        border: none;
+        color: white;
+    }
+    
+    .btn-tokopedia {
+        background-color: #42B549; /* Warna hijau Tokopedia */
+        border: none;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #7f8c8d;
+        transform: translateY(-2px);
+    }
+    
+    .btn-shopee:hover {
+        background-color: #e04a1b;
+        transform: translateY(-2px);
+        color: white;
+    }
+    
+    .btn-tokopedia:hover {
+        background-color: #3aa142;
+        transform: translateY(-2px);
+        color: white;
+    }
+    
+    .rating {
+        color: #f1c40f;
+        margin: 5px 0;
+    }
+    
+    @media (max-width: 768px) {
+        .product-detail-container {
+            padding: 20px 0;
+        }
+        
+        .product-detail {
+            padding: 20px;
+        }
+        
+        .detail-produk {
+            margin-top: 20px;
+            padding-left: 0;
+        }
+    }
+</style>
+
+<div class="product-detail-container">
+    <div class="container">
+        <div class="product-detail">
+            <div class="row">
+                <!-- Carousel Gambar Produk -->
+                <div class="col-md-6">
+                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% if getproduk.gambar_produk %}
+                                <div class="carousel-item active">
+                                    <img src="{{ getproduk.gambar_produk.url }}" alt="{{ getproduk.nama_produk|default:'Produk' }}">
+                                </div>
+                            {% else %}
+                                <div class="carousel-item active">
+                                    <img src="{% static 'images/no-image.jpg' %}" alt="No Image Available">
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Detail Produk -->
+                <div class="col-md-6 detail-produk">
+                    <h3>{{ getproduk.nama_produk|default:'Nama tidak tersedia' }}</h3>
+
+                    <div class="rating">
+                        {% comment %} Tambahkan bintang rating jika ada data {% endcomment %}
+                    </div>
+
+                    <p><span class="label">Kategori:</span> <span class="text-muted">{{ getproduk.id_kategori|default:'Tidak ada kategori' }}</span></p>
+                    <p><span class="label">Nomor Telepon:</span> <span class="text-muted">{{ getproduk.nomor_telepon|default:'Tidak tersedia' }}</span></p>
+                    <p><span class="label">Deskripsi:</span><br><span class="text-secondary">{{ getproduk.deskripsi_produk|default:'Deskripsi tidak tersedia' }}</span></p>
+                    <p class="price">Rp{{ getproduk.harga_produk|default:'0' }}</p>
+
+                    <div class="mt-4">
+                        <a href="{% url 'read_produk' %}" class="btn btn-secondary btn-custom">Kembali</a>
+
+                        {% if getproduk.link_shopee %}
+                        <a href="{{ getproduk.link_shopee }}" target="_blank" class="btn btn-shopee btn-custom">
+                            <i class="fab fa-shopify"></i> Beli di Shopee
+                        </a>
+                        {% endif %}
+
+                        {% if getproduk.link_tokopedia %}
+                        <a href="{{ getproduk.link_tokopedia }}" target="_blank" class="btn btn-tokopedia btn-custom">
+                            <i class="fas fa-store"></i> Beli di Tokopedia
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

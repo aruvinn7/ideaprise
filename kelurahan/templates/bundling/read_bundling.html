@@ -1,0 +1,129 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Import Poppins Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+
+<!-- Hero Section -->
+<div class="hero" style="background: linear-gradient(to right, #023E8A, #00B4D8); padding: 2rem 0; color: white; margin-bottom: 3rem;">
+  <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+    <h1 style="color: white; margin: 0; font-size: 2.5rem;">Bundling</h1>  
+  </div>  
+</div>
+
+<!-- Main Content Container -->
+  {% if request.user.is_authenticated %}
+  <div style="background-color: white; padding: 3rem 0;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+      <div class="card" style="background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+        <div style="overflow-x: auto; width: 100%;">
+          <table style="width: 100%; border-collapse: collapse;">
+      <thead style="background-color: #023E8A; color: white;">
+        <tr>
+          <th style="padding: 15px; text-align: center;">No</th>
+          <th style="padding: 15px; text-align: center;">ID Bundling</th>
+          <th style="padding: 15px; text-align: center;">Nama Bundling</th>
+          <th style="padding: 15px; text-align: center;">Gambar</th>
+          <th style="padding: 15px; text-align: center;">Detail Bundling</th>
+          <th style="padding: 15px; text-align: center;">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in bundlingobj %}
+        <tr style="border-bottom: 1px solid #E0F2F1;">
+          <td style="padding: 15px; color: #023E8A; text-align: center;">{{ forloop.counter }}</td>
+          <td style="padding: 15px; color: #023E8A; text-align: center;">
+            <a href="{% url 'read_detailbundling' i.id_bundling %}" style="color: #0077b6; text-decoration: none;">
+              {{ i.id_bundling }}
+            </a>
+          </td>
+          <td style="padding: 15px; color: #023E8A; text-align: center;">
+            <a href="{% url 'read_detailbundling' i.id_bundling %}" style="color: #0077b6; text-decoration: none; text-align: center;">
+              {{ i.nama_bundling }}
+            </a>
+          </td>
+          <td style="padding: 15px; text-align: center;">
+            {% if i.thumbnail_bundling %}
+              <img src="{{ i.thumbnail_bundling.url }}" alt="Thumbnail" style="height: 80px; object-fit: cover; border-radius: 5px;">
+            {% else %}
+              <span class="text-muted">Tidak ada gambar</span>
+            {% endif %}
+          </td>
+          <td style="padding: 15px; color: #023E8A; text-align: center;">
+            {% with detaillist=i.detailbundling_set.all %}
+              {% for x in detaillist %}
+                {{ x.id_produk.nama_produk }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            {% endwith %}
+          </td>
+          <td style="padding: 15px; text-align: center;">
+            <a href="{% url 'update_bundling' i.id_bundling %}" 
+               style="background-color: #0096C7; color: white; padding: 7px 14px; border-radius: 4px; margin-right: 6px; text-decoration: none; transition: background 0.2s;">
+              Update
+            </a>
+            <a href="{% url 'delete_bundling' i.id_bundling %}" 
+               style="background-color: #E63946; color: white; padding: 7px 14px; border-radius: 4px; text-decoration: none; transition: background 0.2s;">
+              Delete
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+        </div>
+      </div>
+      {% if request.user.is_authenticated %}
+      <a href="{% url 'create_bundling' %}" class="btn btn-primary mt-4">Tambah Bundling</a>
+      {% endif %}
+
+    </div>
+  </div>
+
+  {% else %}
+  
+<div style="background-color: white; padding: 3rem 0;">
+  <div class="produk-grid">
+    {% for bundling in bundlingobj %}
+    <div class="produk-card">
+      {% if bundling.thumbnail_bundling %}
+        <img class="produk-image" src="{{ bundling.thumbnail_bundling.url }}" alt="{{ bundling.nama_bundling }}">
+      {% else %}
+        <img class="produk-image" src="{% static 'images/default.jpg' %}" alt="default">
+      {% endif %}
+
+      <div class="produk-info">
+        <div>
+          <h3>{{ bundling.nama_bundling }}</h3>
+          <p class="produk-price">Rp{{ bundling.harga_bundling|floatformat:0 }}</p>
+          <p class="produk-description product-description-{{ bundling.id_bundling }}">
+            {{ bundling.deskripsi_bundling }}
+          </p>
+
+        </div>
+        <a href="{% url 'read_detailbundling' bundling.id_bundling %}" class="produk-button">
+          View Detail
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+</div>
+
+<script>
+function toggleDescription(bundlingId) {
+  const desc = document.querySelector(`.product-description-${bundlingId}`);
+  const button = desc.nextElementSibling;
+
+  if (desc.style.display === 'none') {
+    desc.style.display = 'block';
+    button.textContent = 'Read Less';
+  } else {
+    desc.style.display = 'none';
+  }
+}
+</script>
+{% endblock %}

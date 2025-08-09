@@ -1,0 +1,196 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Styling khusus untuk halaman ini */
+    .bundling-detail-container {
+        padding: 40px 0;
+        background: #f5f7fa;
+    }
+    
+    .bundling-detail {
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+        margin-bottom: 40px;
+    }
+    
+    .bundling-detail:hover {
+        transform: translateY(-5px);
+    }
+    
+    .gambar-bundling img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    
+    .detail-bundling {
+        padding-left: 30px;
+    }
+    
+    .detail-bundling p {
+        margin: 10px 0;
+        line-height: 1.6;
+    }
+    
+    .label {
+        font-weight: 500;
+        color: #34495e;
+        width: 130px;
+        display: inline-block;
+    }
+    
+    .price {
+        color: #27ae60;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    .btn-custom {
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-secondary {
+        background-color: #95a5a6;
+        border: none;
+    }
+    
+    .btn-shopee {
+        background-color: #FE5722; /* Warna oranye Shopee */
+        border: none;
+        color: white;
+    }
+    
+    .btn-tokopedia {
+        background-color: #42B549; /* Warna hijau Tokopedia */
+        border: none;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #7f8c8d;
+        transform: translateY(-2px);
+    }
+    
+    .btn-shopee:hover {
+        background-color: #e04a1b;
+        transform: translateY(-2px);
+        color: white;
+    }
+    
+    .btn-tokopedia:hover {
+        background-color: #3aa142;
+        transform: translateY(-2px);
+        color: white;
+    }
+    
+    .produk-list {
+        margin-top: 40px;
+    }
+    
+    .produk-item {
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        padding: 15px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+    
+    .produk-item img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    
+    @media (max-width: 768px) {
+        .bundling-detail-container {
+            padding: 20px 0;
+        }
+        
+        .detail-bundling {
+            padding-left: 0;
+            margin-top: 20px;
+        }
+        
+        .gambar-bundling img {
+            height: auto;
+            width: auto;
+        }
+        
+        .produk-item {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .produk-item img {
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
+<div class="bundling-detail-container">
+    <div class="container">
+        <div class="bundling-detail">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="gambar-bundling">
+                        <img src="{{ getbundling.gambar_bundling.url }}" alt="Gambar Bundling">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-bundling">
+                        <h3>{{ getbundling.nama_bundling|default:"Nama tidak tersedia" }}</h3>
+                        <p><span class="label">Deskripsi:</span><br><span class="text-secondary">{{ getbundling.deskripsi|default:"Deskripsi tidak tersedia" }}</span></p>
+                        <p><span class="price">Rp{{ getbundling.harga_bundling|default:"0" }}</span></p>
+
+                        <div class="button-group mt-4">
+                            <a href="{% url 'read_bundling' %}" class="btn btn-secondary btn-custom">← Kembali</a>
+                            
+                            {% if getbundling.link_shopee %}
+                            <a href="{{ getbundling.link_shopee }}" target="_blank" class="btn btn-shopee btn-custom">
+                                <i class="fab fa-shopify"></i> Beli di Shopee
+                            </a>
+                            {% endif %}
+                            
+                            {% if getbundling.link_tokopedia %}
+                            <a href="{{ getbundling.link_tokopedia }}" target="_blank" class="btn btn-tokopedia btn-custom">
+                                <i class="fas fa-store"></i> Beli di Tokopedia
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="produk-list mt-5">
+            <h4>Produk dalam Bundling Ini:</h4>
+            {% for i in getdetailbundling %}
+                <div class="produk-item">
+                    <img src="{{ i.id_produk.gambar_produk.url }}" alt="{{ i.id_produk.nama_produk }}">
+                    <div>
+                        <p><strong>{{ i.id_produk.nama_produk }}</strong></p>
+                        <p class="text-muted">Rp{{ i.id_produk.harga_produk }}</p>
+                        <p class="text-secondary">{{ i.id_produk.deskripsi_produk }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-muted">Tidak ada produk dalam bundling ini.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
