@@ -78,12 +78,35 @@ WSGI_APPLICATION = 'arjosari.wsgi.application'
 # ✅ DATABASE CONFIGURATION - GANTI DENGAN INI
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-if os.getenv('DATABASE_URL'):
-    # Production/Railway - menggunakan PostgreSQL
-    DATABASES = {
-        'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
-    }
+database_url = os.getenv('DATABASE_URL')
+if database_url:
+    print(f"🔍 DATABASE_URL exists: {len(database_url)} characters")
+    print(f"🔍 DATABASE_URL starts with: {database_url[:20]}...")
+    
+    try:
+        # Parse DATABASE_URL
+        parsed_db = dj_database_url.parse(database_url)
+        print(f"🔍 Parsed database config:")
+        print(f"   - ENGINE: {parsed_db.get('ENGINE')}")
+        print(f"   - NAME: {parsed_db.get('NAME')}")
+        print(f"   - HOST: {parsed_db.get('HOST')}")
+        print(f"   - PORT: {parsed_db.get('PORT')}")
+        print(f"   - USER: {parsed_db.get('USER')}")
+        
+        DATABASES = {
+            'default': parsed_db
+        }
+    except Exception as e:
+        print(f"❌ Error parsing DATABASE_URL: {e}")
+        # Fallback ke SQLite jika parsing gagal
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 else:
+    print("❌ No DATABASE_URL found")
     # Development - menggunakan SQLite
     DATABASES = {
         'default': {
