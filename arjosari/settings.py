@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-9e$58t^v()aq#&b=e&kkddc=rae*e3q7=62=^&u3$+w75-g4e1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ["ideaprise.up.railway.app", "localhost"]
+ALLOWED_HOSTS = ["ideaprise.up.railway.app", "localhost", "127.0.0.1"]
 
 
 
